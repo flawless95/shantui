@@ -33,6 +33,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/publishMoment',
+    name: 'PublishMoment',
+    component: () => import(/* webpackChunkName: "publishMoment" */ '../views/PublishMoment.vue'),
+  },
 ];
 
 const router = new VueRouter({

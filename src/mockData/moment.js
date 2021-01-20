@@ -1,8 +1,10 @@
 import avatar1 from '../assets/avatar1.png';
 import avatar2 from '../assets/avatar2.png';
+import avatar3 from '../assets/avatar3.png';
 import moment1 from '../assets/moment1.png';
 import moment2 from '../assets/moment2.png';
 import moment3 from '../assets/moment3.png';
+import moment4 from '../assets/moment4.png';
 
 export const momentList = [
   {
@@ -22,11 +24,14 @@ export const momentList = [
     },
     praise: {
       num: 555,
+      havePraised: true,
     },
     comment: {
       num: 55,
     },
-    share: {},
+    share: {
+      num: 0,
+    },
   },
   {
     avatar: avatar2,
@@ -48,7 +53,31 @@ export const momentList = [
     comment: {
       num: 35,
     },
-    share: {},
+    share: {
+      num: 12,
+    },
+  },
+  {
+    avatar: avatar3,
+    name: '山推小小哥001',
+    time: '2021-1-11 20:23:21',
+    momentText: '推土机连续十七年全球产销量第一，是全球建设机械制造商50强、中国制造业500强。',
+    momentImg: [
+      moment4,
+    ],
+    location: {
+      title: '山推国际事业园',
+    },
+    praise: {
+      num: 195,
+      havePraised: true,
+    },
+    comment: {
+      num: 49,
+    },
+    share: {
+      num: 12,
+    },
   },
 ];
 

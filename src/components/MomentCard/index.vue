@@ -1,62 +1,119 @@
 <template>
   <div class="momentcard">
     <div class="momentcard-basic">
-      <div class="momentcard-basic-avatar">
-        <img class="avatar" :src="moment.avatar" alt="">
+      <div class="momentcard-basic-avatar" @click="showUserInfoHandler">
+        <img class="avatar" :src="momentData.avatar" alt="" />
       </div>
       <div class="momentcard-basic-info">
         <div class="momentcard-basic-info-name">
-          {{moment.name}}
+          {{ momentData.name }}
         </div>
         <div class="momentcard-basic-info-time">
-          {{moment.time}}
+          {{ momentData.time }}
         </div>
       </div>
     </div>
     <div class="momentcard-message">
       <div class="momentcard-message-text">
         <span v-if="moment.inviteUser" class="momentcard-message-inviteuser">
-          @{{moment.inviteUser.name}}
+          @{{ momentData.inviteUser.name }}
         </span>
-        <span>{{moment.momentText}}</span>
+        <span>{{ momentData.momentText }}</span>
       </div>
-      <div class="momentcard-message-img-wrapper" v-if="moment.momentImg">
+      <div class="momentcard-message-img-wrapper" v-if="momentData.momentImg">
         <div
-          v-for="(momentImgItem, i) in moment.momentImg"
-          :key="i" class="momentcard-message-img-item"
+          v-for="(momentImgItem, i) in momentData.momentImg"
+          :key="i"
+          class="momentcard-message-img-item"
         >
-          <img :src="momentImgItem" alt="">
+          <center-img :imgPath="momentImgItem"></center-img>
         </div>
       </div>
     </div>
     <div class="momentcard-location">
-      <span class="momentcard-location-content">
-        <van-icon :name="locationImg" />
-        <span>{{moment.location.title}}</span>
-      </span>
+      <location-tab :address="momentData.location.title"></location-tab>
     </div>
-    <div class="momentcard-operation"></div>
+    <div class="momentcard-operation">
+      <div
+        class="momentcard-operation-item momentcard-operation-praise"
+        @click="togglePraise"
+      >
+        <div
+          class="momentcard-operation-havePraised-img momentcard-operation-item-img"
+          v-if="momentData.praise.havePraised"
+        ></div>
+        <div
+          class="momentcard-operation-praise-img momentcard-operation-item-img"
+          v-else
+        ></div>
+        <div class="momentcard-operation-item-num">
+          {{ momentData.praise.num }}
+        </div>
+      </div>
+      <div class="momentcard-operation-item momentcard-operation-comment">
+        <div
+          class="momentcard-operation-comment-img momentcard-operation-item-img"
+        ></div>
+        <div class="momentcard-operation-item-num">
+          {{ momentData.comment.num }}
+        </div>
+      </div>
+      <div class="momentcard-operation-item momentcard-operation-share">
+        <div
+          class="momentcard-operation-share-img momentcard-operation-item-img"
+        ></div>
+        <div class="momentcard-operation-item-num">
+          {{ momentData.share.num }}
+        </div>
+      </div>
+    </div>
+    <user-info
+      class="momentcard-userinfo"
+      v-if="showUserInfo"
+      @close="closeUserInfo"
+      :user="momentData"
+    ></user-info>
   </div>
 </template>
 
 <script>
-import locationImg from '../../assets/location.png';
+import LocationTab from '../LocationTab/index.vue';
+import UserInfo from '../UserInfo/index.vue';
+import CenterImg from '../CenterImg/index.vue';
 
 export default {
   name: 'MomentCard',
   data() {
     return {
-      locationImg,
+      showUserInfo: false,
+      momentData: this.moment,
     };
   },
   props: {
     moment: {
       type: Object,
-      // default: {},
     },
   },
-  components: {},
-  methods: {},
+  components: {
+    UserInfo,
+    CenterImg,
+    LocationTab,
+  },
+  methods: {
+    showUserInfoHandler() {
+      this.showUserInfo = true;
+    },
+    closeUserInfo() {
+      this.showUserInfo = false;
+    },
+    togglePraise() {
+      this.$set(
+        this.momentData.praise,
+        'havePraised',
+        !this.momentData.praise.havePraised,
+      );
+    },
+  },
 };
 </script>
 <style lang="css">
@@ -71,7 +128,7 @@ export default {
   box-sizing: border-box;
   font-size: 10px;
 }
-.momentcard-basic{
+.momentcard-basic {
   display: flex;
   justify-content: flex-start;
   height: 1.5rem;
@@ -95,8 +152,8 @@ export default {
   color: #a2a6a8;
   font-weight: 300;
 }
-.avatar{
-  widows: 1.2rem;
+.avatar {
+  width: 1.2rem;
   height: 1.2rem;
   border-radius: 0.6rem;
 }
@@ -112,17 +169,6 @@ export default {
 }
 .momentcard-message-img-item {
   margin-right: 0.5rem;
-  width: 3rem;
-  height: 3rem;
-  position: relative;
-  overflow: hidden;
-}
-.momentcard-message-img-item img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  height: 3.3rem
 }
 .momentcard-message-text {
   font-size: 13px;
@@ -133,16 +179,38 @@ export default {
   width: 100%;
   box-sizing: border-box;
 }
-.momentcard-location-content{
-  display: inline-block;
-  color: #515354;
-  background-color: #d9edff;
-  padding: 0.14rem 0.21rem;
-  vertical-align: middle;
-  box-sizing: border-box;
+.momentcard-operation {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0.4rem;
 }
-.momentcard-location-content span {
-  display: inline-block;
-  margin-left: 0.12rem;
+.momentcard-operation-item-img {
+  background-size: 0.5rem 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.15rem;
+}
+.momentcard-operation-item {
+  margin-right: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.momentcard-operation-praise-img {
+  background-image: url('../../assets/praise.png');
+}
+.momentcard-operation-comment-img {
+  background-image: url('../../assets/comment.png');
+}
+.momentcard-operation-share-img {
+  background-image: url('../../assets/share.png');
+}
+.momentcard-operation-havePraised-img {
+  background-image: url('../../assets/havePraised.png');
+}
+.momentcard-operation-item-num {
+  font-size: 14px;
 }
 </style>
